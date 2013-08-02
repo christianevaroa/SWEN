@@ -16,4 +16,8 @@ public class Solution {
 				this.room.equals(a.getRoom()) &&
 				this.weapon.equals(a.getWeapon());
 	}
+	
+	public String toString(){
+		return murderer.getName() + " in the " + room.getName() + " with the " + weapon.getName();
+	}
 }

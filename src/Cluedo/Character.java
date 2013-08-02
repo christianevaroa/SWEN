@@ -7,6 +7,10 @@ public class Character implements Card {
 		this.name = name;
 	}
 	
+	public Character copy(){
+		return new Character(this.name);
+	}
+	
 	@Override
 	public String getName() {
 		return this.name;

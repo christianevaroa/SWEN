@@ -6,6 +6,10 @@ public class Weapon implements Card {
 	public Weapon(String name) {
 		this.name = name;
 	}
+	
+	public Weapon copy(){
+		return new Weapon(this.name);
+	}
 
 	@Override
 	public String getName() {
