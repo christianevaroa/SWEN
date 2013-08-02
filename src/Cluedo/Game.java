@@ -1,6 +1,7 @@
 package Cluedo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,18 +14,47 @@ public class Game {
 	private List<Player> players;
 	private Scanner input;
 	private Solution solution;
+	private boolean gameWon = false;
 
 	public Game(){
+		// Initialise fields
 		this.board = new Board();
 		this.players = new ArrayList<Player>();
 		this.remainingCards = new ArrayList<Card>();
+		// Create deck and solution
 		makeCards();
 		makeSolution();
+		// Create Players
 		input = new Scanner(System.in);
 		System.out.println("How many players?");
 		makePlayers(input.nextInt());
+		// Deal cards to players.
+		deal();
+		printHands();
 	}
 	
+	public void play(){
+		while(!gameWon){
+			
+		}
+	}
+
+	/**
+	 * Shuffle the cards and deal them one by one to each player.
+	 */
+	public void deal(){
+		Collections.shuffle(remainingCards);
+		int p = 0;
+		for(Card c : remainingCards){
+			players.get(p).giveCard(c);
+			if(p == numPlayers-1){
+				p = 0;
+			}else{ 
+				p++; 
+			}
+		}
+	}
+
 	/**
 	 * Tell the board to move the current player in a direction.
 	 * Returns false if player couldn't move in that direction -> ask for a different direction.
@@ -36,6 +66,19 @@ public class Game {
 		return board.move(currentPlayer, direction);
 	}
 	
+	/**
+	 * TEST METHODS - DELETE BEFORE SUBMITTING***************
+	 */
+	public void printHands(){
+		for(Player p : players){
+			System.out.println(p.getName()+": "+p.handToString());
+		}
+	}
+
+	/**
+	 * Private methods for setting up the game below here
+	 */
+
 	/**
 	 * Create players based on the number of players entered.
 	 * @param numPlayers Number of players to create.
@@ -87,14 +130,14 @@ public class Game {
 		remainingCards.remove(sRoom);
 		// Create new solution.
 		solution = new Solution(sWeapon, sCharacter, sRoom);
-		System.out.println(solution);
+		System.out.println(solution); // TEST - DELETE THIS****************
 	}
-	
+
 	/**
 	 * String arrays for card names.
 	 */
 	private String[] weaponNames = { "Rope", "Candlestick", "Knife", "Pistol", "Baseball Bat", "Dumbbell", "Trophy", "Poison", "Axe" };
 	private String[] characterNames = { "Kasandra Scarlett", "Jack Mustard", "Diane White", "Jacob Green", "Eleanor Peacock", "Victor Plum" };
 	private String[] roomNames = { "Spa", "Theatre", "Living Room", "Conservatory", "Patio", "Hall", "Kitchen", "Dining Room", "Guest House", "Pool" };
-	
+
 }

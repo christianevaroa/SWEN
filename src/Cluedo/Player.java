@@ -25,4 +25,12 @@ public class Player {
 		return hand.contains(c);
 	}
 	
+	public String handToString(){
+		StringBuilder handString = new StringBuilder();
+		for(Card c : this.hand){
+			handString.append(c.getName() + ", ");
+		}
+		return handString.toString();
+	}
+	
 }
