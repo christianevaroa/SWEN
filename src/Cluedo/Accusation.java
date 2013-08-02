@@ -1,17 +1,17 @@
 package Cluedo;
 
 public class Accusation {
-	private Person murderer;
+	private Character murderer;
 	private Room room;
 	private Weapon weapon;
 	
-	public Accusation(Person murderer, Room room, Weapon weapon) {
+	public Accusation(Character murderer, Room room, Weapon weapon) {
 		this.murderer = murderer;
 		this.room = room;
 		this.weapon = weapon;
 	}
 	
-	public Person getMurderer() {
+	public Character getMurderer() {
 		return this.murderer;
 	}
 	
