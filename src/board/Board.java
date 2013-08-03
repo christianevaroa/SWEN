@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.CharBuffer;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import java.util.Map;
 import Cluedo.*;
 
 public class Board {
+	private int width = 25;
+	private int height = 25;
 	private Tile[][] board;
 	private Map<Player, Point> playerMap;
 	private List<Player> players;
@@ -20,12 +23,12 @@ public class Board {
 
 	
 	public Board(){
-		board = new Tile[25][25];
+		board = new Tile[height][width];
 	}
 
 	public Board(List<Player> p) {
 		players =p;
-		board = new Tile[25][25];
+		board = new Tile[height][width];
 
 	}
 
@@ -49,7 +52,26 @@ public class Board {
 
 		if(direction.equalsIgnoreCase("north")){
 			int[] move = {0,-1};
+			Point current = playerMap.get(p);
+			
+			
+			
+		
 		}
+		if(direction.equalsIgnoreCase("south")){
+			int[] move = {0,1};
+			Point current = playerMap.get(p);
+		}
+		if(direction.equalsIgnoreCase("east")){
+			int[] move = {1,0};
+			Point current = playerMap.get(p);
+		}
+		if(direction.equalsIgnoreCase("west")){
+			int[] move = {-1,0};
+			Point current = playerMap.get(p);
+		}
+
+
 
 
 		return false;
@@ -69,52 +91,121 @@ public class Board {
 
 
 	}
+
 	
 	/**
+	 *  reads in the board from the 'board' file which is an ascii representation
+	 *  of the board. 
+	 *  	'#' is represents a wall
+	 *  	'd' represents a doorway 
+	 *   	' ' is a hallway tile
 	 * 
 	 */
 	
 	public void createBoard(){
 		
 		try{
-			//String line;
+			// read in the board from board file
 			BufferedReader br = new BufferedReader(new FileReader("board"));
-			char[] temp = new char[25];
-			//line = br.readLine();
-			for(int i =0; i<26; i++){
-				br.read(temp);
-				readBoardLine(temp);
+		
+			for(int i =0; i<25; i++){
+				// turns each line into an array
+				String line = br.readLine();
+				char[] temp = line.toCharArray();
+				// then hands over to the readBoardLine method which chops it up into
+				// an array of tiles and adds to the 2d array of tiles
+				board[i] = readBoardLine(temp);
+
 			}
-				
+			
 			br.close();
+			//just to check if it works, will delete this	
+			System.out.println(this.toString());
+			
+			
 			
 		}catch (IOException e){
 			System.out.println(e.getStackTrace());
 		}
-		
 	}
+	
+	/**
+	 * Builds a string of characters representing the board
+	 */
+		
+	@Override
+	public String toString(){
+		if(board==null){
+			return "null";
+		}else{
+			StringBuilder sb = new StringBuilder();
+				
+			for(int i = 0; i<board[0].length;i++){
+				for(int j = 0;j<board[i].length; j++){
+					if(board[i][j] instanceof Wall){
+						sb.append('#');
+					}
+					if(board[i][j] instanceof HallTile){
+						sb.append(' ');
+					}
+					if(board[i][j] instanceof Doorway){
+						sb.append('d');
+					}
+				}
+				sb.append('\n');
+			}	
+			return sb.toString();
+		}
+	}
+	
+	
+	
+	/**
+	 * helper method that converts a char array into a an array of tiles which represent one row on the board
+	 * @param info
+	 * @return
+	 */
+	
 	
 	private Tile[] readBoardLine(char[] info){
 		Tile[] tiles = new Tile[25];
 		int chartile;
 		
 		for(int i = 0; i< info.length ;i++){
-			System.out.print(info[i]);
+
 			
-			switch
-			
-			
-			if(info[i]=='#'){
-				Tile t = new HallTile();
+			chartile = info[i];
+			switch(chartile){
+				case '#': 
+					Tile t = new Wall();
+					tiles[i] = t;
+					break;
+				case 'd':
+					Tile d = new Doorway();
+					tiles[i] = d;
+					break;
+				case ' ':
+					Tile h = new HallTile();
+					tiles[i]= h;
+					break;
+				case 'f':
+					Tile w = new Wall();
+					tiles[i] = w;
+					break;
+				default:
+					break;
 			}
-			if(info[i]==)
 			
-			
-			
+
 		}
-		return null;
+		return tiles;
 	}
 
+	
+	private void checkValidMove(){
+		
+		
+	}
 
 
 
@@ -123,15 +214,23 @@ public class Board {
 
 	}
 
+	
+	/**
+	 * Manually creates the Rooms on the board
+	 * @param weapons
+	 */
+	
 	private void createRooms(List<Weapon> weapons){
-
+		// probably gonna have to manually add rooms
 		Collections.shuffle(weapons);
 		int index = 0;
 
-
 		boolean dirs[] = {true, false, false, false};
-
+		// create kitchen
 		RoomTile r = new RoomTile(dirs, "Kitchen",weapons.get(index++));
+		
+		
+		
 	}
 
 
@@ -168,14 +267,9 @@ public class Board {
 	}
 
 
-	public static void main(String args[]){
+	public static void main(String args[]) throws IOException{
 		Board b = new Board();
-		try {
-			b.createBoard();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		b.createBoard();
 		
 
 	}

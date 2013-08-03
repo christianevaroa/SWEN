@@ -17,7 +17,7 @@ public class Doorway extends Tile {
 	 * @param r
 	 */
 	public Doorway(boolean[] dirs, String roomname, Board b, RoomTile r) {
-		super(dirs, roomname);
+		//super(dirs, roomname);
 
 
 
@@ -26,5 +26,10 @@ public class Doorway extends Tile {
 
 		// TODO Auto-generated constructor stub
 	}
+	
+	public Doorway(){
+		
+	}
+	
 
 }

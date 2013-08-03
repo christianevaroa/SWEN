@@ -7,11 +7,13 @@ public class RoomTile extends Tile {
 	private String room;
 	private Weapon weapon;
 
-
+	public RoomTile(){
+		
+	}
 
 
 	public RoomTile(boolean[] d, String roomname, Weapon w) {
-		super(d, roomname);
+		room = roomname;
 		weapon = w;
 		// TODO Auto-generated constructor stub Need to add in
 	}

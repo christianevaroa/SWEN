@@ -6,10 +6,15 @@ public class Tile {
 	private boolean[] directions;
 	private String room;
 	
-	public Tile(boolean[] dirs, String room) {
+	public Tile(){
+		
+		
+	}
+	
+	/*public Tile(boolean[] dirs, String room) {
 		this.directions = Arrays.copyOf(dirs, dirs.length);
 		this.room = room;
-	}
+	}*/
 	
 	/**
 	 * Directions:
