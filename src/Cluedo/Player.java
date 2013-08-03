@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
+
 	private String name;
 	private List<Card> hand;
+	private boolean out;
 	
 	public Player(String name){
 		this.name = name;
@@ -31,6 +33,15 @@ public class Player {
 			handString.append(c.getName() + ", ");
 		}
 		return handString.toString();
+	}
+	
+	public boolean out(){
+		return out;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 	
 }

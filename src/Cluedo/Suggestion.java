@@ -2,12 +2,11 @@ package Cluedo;
 
 public class Suggestion {
 
-	private Weapon weapon;
 	private Character character;
 	private Room room;
+	private Weapon weapon;
 	
-	public Suggestion(Weapon weapon, Character character, Room room){
-		this.weapon = weapon;
+	public Suggestion(Character character, Room room, Weapon weapon){
 		this.character = character;
 		this.room = room;
 	}
