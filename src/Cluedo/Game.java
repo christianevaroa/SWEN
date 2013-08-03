@@ -3,6 +3,7 @@ package Cluedo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
@@ -10,33 +11,59 @@ public class Game {
 	private Board board;
 	private Player currentPlayer;
 	private int numPlayers;
+	private int numDice;
+	private Random rand;
 	private List<Card> remainingCards;
 	private List<Player> players;
 	private Scanner input;
 	private Solution solution;
-	private boolean gameWon = false;
+	private boolean playing;
 
 	public Game(){
 		// Initialise fields
 		this.board = new Board();
+		rand = new Random();
 		this.players = new ArrayList<Player>();
 		this.remainingCards = new ArrayList<Card>();
-		// Create deck and solution
+		
+		play();	
+	}
+	
+	/**
+	 * Set up the game and start main loop
+	 */
+	public void play(){
 		makeCards();
 		makeSolution();
-		// Create Players
 		input = new Scanner(System.in);
 		System.out.println("How many players?");
 		makePlayers(input.nextInt());
-		// Deal cards to players.
 		deal();
 		printHands();
+		
+		this.playing = true;
+		currentPlayer = players.get(0);
+		
+		// Main loop
+		while(playing){
+			printOptions();
+			String choice = input.next();
+			input.nextLine(); // throw away the end of line character
+		}
 	}
 	
-	public void play(){
-		while(!gameWon){
-			
+	public void printOptions(){
+		System.out.println(currentPlayer+"'s turn. Options:");
+		System.out.println("8: move North, 6: move East, 2: move South, 4: move West");
+		System.out.println("V: view hand, S: make suggestion, A: make Accusation");
+	}
+	
+	public int roll(){
+		int dice = 0;
+		for(int i = 0; i < this.numDice; i++){
+			dice += rand.nextInt(7);
 		}
+		return dice;
 	}
 
 	/**
@@ -117,9 +144,9 @@ public class Game {
 	private void makeSolution() {
 		// To begin with, weapons occupy 0-8 in remainingCards,
 		// characters are 9-14, and rooms are 15-24.
-		int w = (int)Math.random() * 9;
-		int c = 9 + (int)(Math.random() * (14 - 9 + 1));
-		int r = 15 + (int)(Math.random() * (24 - 15 + 1));
+		int w = rand.nextInt(9);
+		int c = 9 + rand.nextInt(7);
+		int r = 15 + rand.nextInt(10);
 		// Get cards for solution.
 		Weapon sWeapon = (Weapon)remainingCards.get(w);
 		Character sCharacter = (Character)remainingCards.get(c);
