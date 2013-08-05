@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import board.*;
 
 public class Game {
 
@@ -28,7 +29,6 @@ public class Game {
 
 	public Game(){
 		// Initialise fields
-		this.board = new Board();
 		this.rand = new Random();
 		this.players = new ArrayList<Player>();
 		this.remainingCards = new ArrayList<Card>();
@@ -41,6 +41,8 @@ public class Game {
 		this.playersLeft = this.numPlayers;
 		input.nextLine();
 		makePlayers(this.numPlayers);
+		this.board = new Board(players);
+		
 		deal();
 		printHands();
 
@@ -157,25 +159,8 @@ public class Game {
 		Weapon sugWeap = new Weapon(weaponNames[choice]);
 		Suggestion suggestion = new Suggestion(sugChar, sugRoom, sugWeap);
 		board.evaluateSuggestion(suggestion, currentPlayer);
-		//TODO: Figure out the best way of checking suggestions
-		/**
-		// Now check the suggestion against the other players' cards
-		for(Player p : players){
-			// Not sure what to do here, do you give currentPlayer a copy of the card or
-			// Do you just tell them "(other player) refutes your suggestion with (card)"?
-			// Going with second option for now.
-			if(p.holds(sugChar)){
-				System.out.println(p+" refutes your suggestion with "+sugChar);
-			}
-			else if(p.holds(sugRoom)){
-				System.out.println(p+" refutes your suggestion with "+sugRoom);
-			}
-			else if(p.holds(sugWeap)){
-				System.out.println(p+" refutes your suggestion with "+sugWeap);
-			}
-		}
-		**/
-		// Another way: just check if card is still in remainingCards as cards are only removed from there to be put into the solution
+
+		// Refuting: just check if card is still in remainingCards as cards are only removed from there to be put into the solution
 		if(remainingCards.contains(sugChar)){
 			System.out.println("Your suggestion was refuted: "+sugChar+" was not the murderer");
 		} else if(remainingCards.contains(sugRoom)){
