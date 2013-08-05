@@ -12,6 +12,7 @@ public class Game {
 	private Player currentPlayer;
 	private int currentPlayerInt;
 	private int numPlayers;
+	private int playersLeft;
 	private int numDice = 1;
 	private Random rand;
 	private List<Card> remainingCards;
@@ -37,6 +38,8 @@ public class Game {
 		input = new Scanner(System.in);
 		System.out.println("How many players?");
 		this.numPlayers = input.nextInt();
+		this.playersLeft = this.numPlayers;
+		input.nextLine();
 		makePlayers(this.numPlayers);
 		deal();
 		printHands();
@@ -52,15 +55,26 @@ public class Game {
 	 */
 	public void play(){
 		this.playing = true;
-
 		// Main loop
 		while(playing){
 			boolean done = false;
+			// First check if everyone is out. If everyone is out, end the game.
+			while(currentPlayer.isOut()){
+				this.playersLeft--;
+				endTurn();
+				if(this.playersLeft == 0)
+					break;
+			}	
+			if(this.playersLeft == 0){
+				System.out.println("Everyone lost.");
+				this.playing = false;
+				break;
+			}
 			// This while loop represents one turn
+			int movesLeft = roll();
+			System.out.println(currentPlayer+"'s turn to move. "+currentPlayer+" rolled a "+movesLeft);
 			while(!done){
 				// Movement phase
-				int movesLeft = roll();
-				System.out.println(currentPlayer+"'s turn to move. "+currentPlayer+" rolled a "+movesLeft);
 				while(movesLeft > 0){
 					System.out.println("(N)orth, (E)ast, (S)outh, or (W)est? (F) to finish moving. "+movesLeft+" moves left.");
 					String dir = input.nextLine().trim().toLowerCase();
@@ -92,11 +106,17 @@ public class Game {
 					endTurn();
 					done = true;
 				}
+				else if(choice.equals("o") && canAccuse){ //TODO: remove this test
+					currentPlayer.lose();
+					endTurn();
+					done = true;
+				}
 				else{
 					System.out.println("Invalid choice.");
 				}
 			}
 		}
+		System.out.println("Game over.");
 	}
 	/**
 	 * Builds a String of your available options at the end of a turn.
@@ -128,15 +148,40 @@ public class Game {
 		}
 		Character sugChar = new Character(characterNames[choice]);
 		choice = -1;
-		while(choice < 0 || choice > roomNames.length){
-			System.out.println("Choose a room:\n"+roomsString);
-			choice = input.nextInt()-1;
-		}
-		Room sugRoom = new Room(roomNames[choice]);
-		choice = -1;
+		//Room sugRoom = board.getRoom(currentPlayer);
+		Room sugRoom = solution.room();  //******** TODO: <= Testing only, fix this
 		while(choice < 0 || choice > weaponNames.length){
 			System.out.println("Choose a weapon:\n"+weaponsString);
 			choice = input.nextInt()-1;
+		}
+		Weapon sugWeap = new Weapon(weaponNames[choice]);
+		Suggestion suggestion = new Suggestion(sugChar, sugRoom, sugWeap);
+		board.evaluateSuggestion(suggestion, currentPlayer);
+		//TODO: Figure out the best way of checking suggestions
+		/**
+		// Now check the suggestion against the other players' cards
+		for(Player p : players){
+			// Not sure what to do here, do you give currentPlayer a copy of the card or
+			// Do you just tell them "(other player) refutes your suggestion with (card)"?
+			// Going with second option for now.
+			if(p.holds(sugChar)){
+				System.out.println(p+" refutes your suggestion with "+sugChar);
+			}
+			else if(p.holds(sugRoom)){
+				System.out.println(p+" refutes your suggestion with "+sugRoom);
+			}
+			else if(p.holds(sugWeap)){
+				System.out.println(p+" refutes your suggestion with "+sugWeap);
+			}
+		}
+		**/
+		// Another way: just check if card is still in remainingCards as cards are only removed from there to be put into the solution
+		if(remainingCards.contains(sugChar)){
+			System.out.println("Your suggestion was refuted: "+sugChar+" was not the murderer");
+		} else if(remainingCards.contains(sugRoom)){
+			System.out.println("Your suggestion was refuted: The murder didn't occur in "+sugRoom);
+		} else if(remainingCards.contains(sugWeap)){
+			System.out.println("Your suggestion was refuted: "+sugWeap+" wasn't the murder weapon");
 		}
 	}
 	/**
@@ -145,7 +190,30 @@ public class Game {
 	 * currentPlayer is removed from game if the accusation is refuted.
 	 */
 	public void makeAccusation(){
-
+		int choice = -1;
+		while(choice < 0 || choice > characterNames.length){
+			System.out.println("Choose a character:\n"+charactersString);
+			choice = input.nextInt()-1;
+		}
+		Character accChar = new Character(characterNames[choice]);
+		choice = -1;
+		while(choice < 0 || choice > roomNames.length){
+			System.out.println("Choose a character:\n"+roomsString);
+			choice = input.nextInt()-1;
+		}
+		Room accRoom = board.getRoom(currentPlayer);
+		choice = -1;
+		while(choice < 0 || choice > weaponNames.length){
+			System.out.println("Choose a weapon:\n"+weaponsString);
+			choice = input.nextInt()-1;
+		}
+		Weapon accWeap = new Weapon(weaponNames[choice]);
+		Accusation accusation = new Accusation(accChar, accRoom, accWeap);
+		if(solution.checkAccusation(accusation)){
+			System.out.println(currentPlayer+" wins! The solution was:\n"+solution.toString());
+			endTurn();
+			playing = false;
+		}
 	}
 	/**
 	 * Resets fields for suggesting/accusing and moves to next player
@@ -153,7 +221,7 @@ public class Game {
 	public void endTurn(){
 		canSuggest = false;
 		canAccuse = false;
-		if(currentPlayerInt < numPlayers){
+		if(currentPlayerInt < numPlayers-1){
 			currentPlayer = players.get(++currentPlayerInt);
 		}
 		else {
@@ -162,19 +230,19 @@ public class Game {
 		}
 	}
 	/**
-	 * Roll dice * this.numDice
+	 * Roll the dice
 	 * @return value rolled
 	 */
 	public int roll(){
 		int dice = 0;
 		for(int i = 0; i < this.numDice; i++){
-			dice += rand.nextInt(7);
+			dice += 1 + rand.nextInt(6);
 		}
 		return dice;
 	}
-
 	/**
 	 * Shuffle the cards and deal them one by one to each player.
+	 * Then sort player's hands.
 	 */
 	public void deal(){
 		Collections.shuffle(remainingCards);
@@ -187,8 +255,11 @@ public class Game {
 				p++; 
 			}
 		}
+		for(Player pl : players){
+			pl.sort();
+		}
+		Collections.sort(remainingCards, new CardComparator());
 	}
-
 	/**
 	 * Tell the board to move the current player in a direction.
 	 * Returns false if player couldn't move in that direction -> ask for a different direction.
@@ -200,7 +271,7 @@ public class Game {
 		return board.move(currentPlayer, direction);
 	}
 	/**
-	 * TEST METHODS - DELETE BEFORE SUBMITTING***************
+	 *TODO: TEST METHODS - DELETE BEFORE SUBMITTING***************
 	 */
 	public void printHands(){
 		for(Player p : players){
@@ -211,7 +282,6 @@ public class Game {
 	/**
 	 * Private methods for setting up the game below here
 	 */
-
 	/**
 	 * Create players based on the number of players entered.
 	 * @param numPlayers Number of players to create.
@@ -221,9 +291,9 @@ public class Game {
 		for(int i = 1; i <= numPlayers; i++){
 			System.out.println("Enter name for player "+i+":");
 			players.add(new Player(input.next()));
+			input.nextLine();
 		}
 	}
-
 	/**
 	 * Create all cards for the game and put them into remainingCards
 	 */
@@ -241,16 +311,16 @@ public class Game {
 			remainingCards.add(new Room(roomNames[i]));
 		}
 	}
-
 	/**
 	 * Create a random solution for this game.
 	 */
 	private void makeSolution() {
 		// To begin with, weapons occupy 0-8 in remainingCards,
 		// characters are 9-14, and rooms are 15-24.
-		int w = rand.nextInt(10);
-		int c = 9 + rand.nextInt(7);
-		int r = 15 + rand.nextInt(11);
+		int w = rand.nextInt(9);
+		int c = 9 + rand.nextInt(14 - 9 + 1);
+		int r = 15 + rand.nextInt(24 - 15 + 1);
+		System.out.println(w+" "+c+" "+r);
 		// Get cards for solution.
 		Weapon sWeapon = (Weapon)remainingCards.get(w);
 		Character sCharacter = (Character)remainingCards.get(c);

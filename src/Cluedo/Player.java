@@ -1,13 +1,14 @@
 package Cluedo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Player {
 
 	private String name;
 	private List<Card> hand;
-	private boolean out;
+	private boolean out = false;
 	
 	public Player(String name){
 		this.name = name;
@@ -19,12 +20,12 @@ public class Player {
 	}
 	
 	public void giveCard(Card c){
-		hand.add(c);
+		this.hand.add(c);
 	}
 	
 	public boolean holds(Card c){
 		if(c == null){ return false; }
-		return hand.contains(c);
+		return this.hand.contains(c);
 	}
 	
 	public String handToString(){
@@ -35,13 +36,21 @@ public class Player {
 		return handString.toString();
 	}
 	
-	public boolean out(){
-		return out;
+	public boolean isOut(){
+		return this.out;
+	}
+	
+	public void lose(){
+		this.out = true;
+	}
+	
+	public void sort(){
+		Collections.sort(this.hand, new CardComparator());
 	}
 	
 	@Override
 	public String toString() {
-		return name;
+		return this.name;
 	}
 	
 }

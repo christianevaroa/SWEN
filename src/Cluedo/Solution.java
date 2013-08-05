@@ -20,4 +20,9 @@ public class Solution {
 	public String toString(){
 		return murderer.getName() + " in the " + room.getName() + " with the " + weapon.getName();
 	}
+	
+	public Room room(){
+		//TODO: delete this method
+		return room;
+	}
 }
