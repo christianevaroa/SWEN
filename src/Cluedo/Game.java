@@ -23,6 +23,7 @@ public class Game {
 	private boolean playing;
 	private boolean canSuggest;
 	private boolean canAccuse;
+	private boolean canUsePassage;
 	private String charactersString = "1: Kasandra Scarlett, 2: Jack Mustard 3: Diane White, 4: Jacob Green, 5: Eleanor Peacock, 6: Victor Plum";
 	private String roomsString = "1: Spa, 2: Theatre, 3: Living Room, 4: Conservatory, 5: Patio, 6: Hall, 7: Kitchen, 8: Dining Room, 9: Guest House, 10: Pool";
 	private String weaponsString = "1: Rope, 2: Candlestick, 3: Knife, 4: Pistol, 5: Baseball Bat, 6: Dumbbell, 7: Trophy, 8: Poison, 9:Axe";
@@ -129,11 +130,15 @@ public class Game {
 		opts.append("(V)iew hand, ");
 		if(board.canSuggest(currentPlayer)){
 			opts.append("Make a (S)uggestion, ");
-			canSuggest = true;
+			this.canSuggest = true;
 		}
 		if(board.canAccuse(currentPlayer)){
 			opts.append("Make an (A)ccusation, ");
-			canAccuse = true;
+			this.canAccuse = true;
+		}
+		if(board.canUsePassage(currentPlayer)){
+			opts.append("Use the secret (P)assage, ");
+			this.canUsePassage = true;
 		}
 		opts.append("(E)nd turn.");
 		return opts.toString();
@@ -158,7 +163,7 @@ public class Game {
 		}
 		Weapon sugWeap = new Weapon(weaponNames[choice]);
 		Suggestion suggestion = new Suggestion(sugChar, sugRoom, sugWeap);
-		board.evaluateSuggestion(suggestion, currentPlayer);
+		board.evaluateSuggestions(currentPlayer, suggestion);
 
 		// Refuting: just check if card is still in remainingCards as cards are only removed from there to be put into the solution
 		if(remainingCards.contains(sugChar)){
