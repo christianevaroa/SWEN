@@ -2,7 +2,7 @@ package board;
 
 import java.util.Arrays;
 
-public class Tile {
+public abstract class Tile {
 	private boolean[] directions;
 	private String room;
 	
@@ -25,9 +25,18 @@ public class Tile {
 	 * @param dir Int representing the direction to check.
 	 * @return directions[dir] or false if dir is invalid (out of bounds)
 	 */
-	public boolean canMove(int dir) {
+	/*
+	 * public boolean canMove(int dir) {
 		if(dir < 0 || dir > 3){ return false; }
 		return directions[dir];
+	}
+	*/
+	
+	// can move into this square?
+	
+	public boolean canMove(){
+		return false;
+		
 	}
 	
 	public String getRoom() {

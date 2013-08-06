@@ -7,5 +7,12 @@ public class HallTile extends Tile {
 		
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+	public boolean canMove(){
+		return true;
+	}
+	
+	
 
 }

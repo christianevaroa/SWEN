@@ -6,10 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.CharBuffer;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import Cluedo.*;
 
@@ -17,29 +14,126 @@ public class Board {
 	private int width = 25;
 	private int height = 25;
 	private Tile[][] board;
-	private Map<Player, Point> playerMap;
-	private List<Player> players;
-	private List<Room> rooms;
+	private Map<Player, Point> playerMap = new HashMap<Player, Point>();
+	private Set<Player> players = new HashSet<Player>();
+	private List<RoomTile> rooms= new ArrayList<RoomTile>();
+	//private List<Doorway> doorways = new ArrayList<Doorway>();
+	private Map<String, Doorway> doorways = new HashMap<String, Doorway>();
 
 	
+	
+	/**
+	 * Creates a new board without players
+	 */
 	public Board(){
 		board = new Tile[height][width];
 	}
 
+	/**
+	 * Creates a new board and assigns the players to their starting position
+	 * 
+	 * @param p
+	 */
 	public Board(List<Player> p) {
-		players =p;
+	
+		players.addAll(p);
+		
 		board = new Tile[height][width];
-
+		this.assignPlayers();
 	}
 
-	public Room getRoom(Player player) {
+	/**
+	 * returns the name of the room that the player is in or null if the player is in a hall way.
+	 * @param player
+	 * @return
+	 */
+	
+	public String getRoom(Player player) {
 		Point p = playerMap.get(player);
-
+		int x = p.x;
+		int y = p.y;
+		if(board[y][x] instanceof Doorway){
+		//	String name = board[y][x].getRoom();
+			return  ((Doorway) board[y][x]).getRoom();
+		}
+		
 		return null;
 	}
 
+	/** 
+	 * prints out the board including player positions to the console 
+	 * 
+	 * 
+	 */
+	
+	public void printBoard(){
+		System.out.print(toString());
+	}
+	
+	
+	/**
+	 * returns true if the players location is one of the Rooms
+	 * @param p
+	 * @return
+	 */
+	public boolean isRoom(Point p){
+		int x = p.x;
+		int y = p.y;
+		if(board[y][x] instanceof Doorway){ 
+			return true; // can't have a doorway without being a room
+		}
+		return false;
+		
+	}
+	
+	
 
-
+	/**
+	 * returns true if players location is in one of the four Rooms at the corners of the house
+	 * @param p
+	 * @return
+	 */	
+	public boolean canUseSecretPassage(Player p){
+		int x = playerMap.get(p).x;
+		int y = playerMap.get(p).y;
+		if(!(board[y][x] instanceof Doorway)){
+			return false;
+		}
+		String name = board[y][x].getRoom();
+		if(name.equals("Spa") ||  name.equals("Guest House") || 
+		   name.equals("Conservatory") ||  name.equals("Kitchen")){
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * moves the player into the room opposite to the one they are in now using the secret passage .
+	 * They must be in one of the four rooms on the corners of the Map
+	 * @param p
+	 */
+	
+	public void useSecretPassage(Player p){
+		Point point = playerMap.get(p);
+		int x = point.x;
+		int y = point.y;
+		
+		if(getRoom(p).equals("Spa")){
+			playerMap.put(p, new Point(20,20));
+		}else if(getRoom(p).equals("Guest House")){
+			playerMap.put(p, new Point(4,6));
+		}else if(getRoom(p).equals("Conservatory")){
+			playerMap.put(p, new Point(6,22));
+		}else if(getRoom(p).equals("Kitchen")){
+			playerMap.put(p, new Point(22,8));
+		}
+		
+		
+		
+	}
+	
+	
 
 	/**
 	 * Moves player one step in the given direction returns true if possible, false if otherwise
@@ -49,34 +143,66 @@ public class Board {
 	 */
 
 	public boolean move(Player p, String direction){
-
-		if(direction.equalsIgnoreCase("north")){
-			int[] move = {0,-1};
-			Point current = playerMap.get(p);
-			
-			
-			
+		//  my brain hurts is it board[y][x] or board[x][y]
+		// pretty sure it is board[y] [x] because the second array in the 2d array reads from left to right
+		int x=0;
+		int y=0;
 		
+		if(direction.equalsIgnoreCase("north")){
+			Point current = playerMap.get(p);
+			x =current.x;
+			y = current.y-1;
 		}
+		
 		if(direction.equalsIgnoreCase("south")){
-			int[] move = {0,1};
+			
 			Point current = playerMap.get(p);
+			x =current.x;
+			y = current.y+1;
 		}
+
 		if(direction.equalsIgnoreCase("east")){
-			int[] move = {1,0};
+			
 			Point current = playerMap.get(p);
+			x =current.x+1;
+			y = current.y;
 		}
 		if(direction.equalsIgnoreCase("west")){
-			int[] move = {-1,0};
 			Point current = playerMap.get(p);
+			x =current.x-1;
+			y = current.y;
 		}
-
-
-
-
+		
+		if(x>=0 && y>= 0 && x<25 && y<25 && board[y][x].canMove()){
+				// handle move
+				playerMap.put(p, new Point(x ,y));
+				return true;
+		}
 		return false;
 	}
-
+	
+	
+	/**
+	 * moves player to location on board specified by params
+	 * 
+	 * @param p
+	 */
+	public void moveTo(Player p, int x, int y){
+		playerMap.put(p, new Point(x,y));
+	}
+	
+	
+	
+	/**
+	 * Iterates through current players and returns their positions
+	 * 
+	 */
+	public void printPlayerLocations(){
+		for (Map.Entry<Player, Point> e : playerMap.entrySet()){
+			String plyr = e.getKey().getName();
+			System.out.printf("%s is at location x: %d y: %d ", plyr, e.getValue().x, e.getValue().y);
+		}
+	}
 
 
 	/**
@@ -88,11 +214,16 @@ public class Board {
 
 	public void evaluateSuggestions(Player p , Suggestion s){
 		// move
-
+		//if(s.getRoom().getName().equals(" ")
+		String name = s.getRoom().getName();
+		Doorway d = doorways.get(name);
+		Point point = new Point(d.x, d.y);
+		playerMap.put(p, point);
+		
 
 	}
-
 	
+
 	/**
 	 *  reads in the board from the 'board' file which is an ascii representation
 	 *  of the board. 
@@ -103,10 +234,11 @@ public class Board {
 	 */
 	
 	public void createBoard(){
+		this.createRooms();
 		
 		try{
 			// read in the board from board file
-			BufferedReader br = new BufferedReader(new FileReader("board"));
+			BufferedReader br = new BufferedReader(new FileReader("board.txt"));
 		
 			for(int i =0; i<25; i++){
 				// turns each line into an array
@@ -114,15 +246,13 @@ public class Board {
 				char[] temp = line.toCharArray();
 				// then hands over to the readBoardLine method which chops it up into
 				// an array of tiles and adds to the 2d array of tiles
-				board[i] = readBoardLine(temp);
+				board[i] = readBoardLine(temp, i);
 
 			}
 			
 			br.close();
 			//just to check if it works, will delete this	
 			System.out.println(this.toString());
-			
-			
 			
 		}catch (IOException e){
 			System.out.println(e.getStackTrace());
@@ -142,13 +272,18 @@ public class Board {
 				
 			for(int i = 0; i<board[0].length;i++){
 				for(int j = 0;j<board[i].length; j++){
-					if(board[i][j] instanceof Wall){
+					if(playerIsAtPosition(j, i)!=null){
+						System.out.println(i + " " + j);
+						sb.append(this.getInitial(playerIsAtPosition(j, i)));
+					}
+					
+					else if(board[i][j] instanceof Wall){
 						sb.append('#');
 					}
-					if(board[i][j] instanceof HallTile){
+					else if(board[i][j] instanceof HallTile){
 						sb.append(' ');
 					}
-					if(board[i][j] instanceof Doorway){
+					else if(board[i][j] instanceof Doorway){
 						sb.append('d');
 					}
 				}
@@ -159,30 +294,58 @@ public class Board {
 	}
 	
 	
+	public void moveSecretPassage(){
+		
+		
+		
+	}
+	
+	
+	
+	
+	/**
+	 * Returns the player at specified position or null if
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	
+	private Player playerIsAtPosition(int x, int y){
+		for (Map.Entry<Player, Point> e : playerMap.entrySet()){
+			if(e.getValue().x==x && e.getValue().y==y){
+				return e.getKey();
+			}
+		}
+		return null;
+	}
+	
+	
+	
 	
 	/**
 	 * helper method that converts a char array into a an array of tiles which represent one row on the board
+	 * if the corresponding tile is a room tile the name of the room gets stored as a string inside the RoomTile object
+	 * 
+	 * 
+	 * 
 	 * @param info
 	 * @return
 	 */
 	
-	
-	private Tile[] readBoardLine(char[] info){
+	private Tile[] readBoardLine(char[] info, int row){
 		Tile[] tiles = new Tile[25];
 		int chartile;
+		// i = the column number here. confused? so am i
 		
-		for(int i = 0; i< info.length ;i++){
-
-			
+		
+		for(int i = 0; i< info.length ;i++){		
 			chartile = info[i];
+			Tile d;
+			String name;
 			switch(chartile){
 				case '#': 
 					Tile t = new Wall();
 					tiles[i] = t;
-					break;
-				case 'd':
-					Tile d = new Doorway();
-					tiles[i] = d;
 					break;
 				case ' ':
 					Tile h = new HallTile();
@@ -192,84 +355,197 @@ public class Board {
 					Tile w = new Wall();
 					tiles[i] = w;
 					break;
+				case '1':
+					// create spa
+					name = "Spa";
+					d = new Doorway(name,this, rooms.get(0),i, row  );
+					doorways.put(name, (Doorway) d);
+					tiles[i] = d;
+					break;
+				case '2':
+					// create theatre
+					name = "Theatre";
+					d = new Doorway(name, this, rooms.get(1),i, row );
+					tiles[i] = d;
+					doorways.put(name, (Doorway) d);
+					break;
+				case '3':
+					// create Living room
+					
+					name = "Living Room";
+					d = new Doorway( name, this, rooms.get(2), i, row );
+					tiles[i] = d;
+					doorways.put(name, (Doorway) d);
+					break;
+				case '4':
+					// conservatory
+					name = "Conservatory";
+					d = new Doorway(name, this, rooms.get(3), i, row   );
+					tiles[i] = d;
+					doorways.put(name, (Doorway) d);
+					break;
+				case '5':
+					//Patio
+					name = "Patio";
+					d = new Doorway(name, this, rooms.get(4),i, row  );
+					tiles[i] = d;
+					doorways.put(name, (Doorway) d);
+					break;
+				case '6':
+					// Hall
+					name = "Hall";
+					d = new Doorway(name, this, rooms.get(5),i, row  );
+					tiles[i] = d;
+					doorways.put(name, (Doorway) d);
+					break;
+				case '7':
+					// Kitchen
+					name = "Kitchen";
+					d = new Doorway( name, this, rooms.get(6) ,i, row  );
+					tiles[i] = d;
+					doorways.put(name, (Doorway) d);
+					break;
+				case '8':
+					// Dining room
+					name = "Dining Room";
+					d = new Doorway(name, this, rooms.get(7),i, row  );
+					tiles[i] = d;
+					doorways.put(name, (Doorway) d);
+					break;
+				case '9':
+					// Guest House
+					name = "Guest House";
+					d = new Doorway( name, this, rooms.get(8) ,i, row  );
+					tiles[i] = d;
+					doorways.put(name, (Doorway) d);
+					break;
+				case 'd':
+					// pool
+					name = "Pool";
+					d = new Doorway(name, this, rooms.get(9), i, row) ;
+					tiles[i] = d; // assign to board
+					doorways.put(name, (Doorway) d) ;
+					
+					break;
+								
 				default:
 					break;
 			}
-			
-
 		}
 		return tiles;
 	}
 
 	
-	private void checkValidMove(){
-		
-		
-	}
-
-
+	
 
 	private void createDoors(){
-
+		
 
 	}
 
 	
 	/**
-	 * Manually creates the Rooms on the board
+	 * Manually creates the Rooms on the board with weapons placed randomly
 	 * @param weapons
 	 */
 	
 	private void createRooms(List<Weapon> weapons){
 		// probably gonna have to manually add rooms
 		Collections.shuffle(weapons);
-		int index = 0;
+		
+		String[] roomNames = { "Spa", "Theatre", "Living Room", "Conservatory", "Patio", "Hall", "Kitchen", "Dining Room", "Guest House", "Pool" };
 
+		
 		boolean dirs[] = {true, false, false, false};
-		// create kitchen
-		RoomTile r = new RoomTile(dirs, "Kitchen",weapons.get(index++));
+		
+		for(int i = 0; i < weapons.size(); i++){
+			// create Roomtiles with random weapons
+			RoomTile r = new RoomTile(dirs, roomNames[i], weapons.get(i)  );
+			rooms.add(r);	
+		}
+	}
+	
+	/**
+	 * creates all the rooms without weapons
+	 * 
+	 * 
+	 */
+	private void createRooms(){
+		
+		String[] roomNames = { "Spa", "Theatre", "Living Room", "Conservatory", "Patio", "Hall", "Kitchen", "Dining Room", "Guest House", "Pool" };
+		boolean dirs[] = {true, false, false, false};
 		
 		
-		
+		for (int i = 0; i< roomNames.length; i++){
+			RoomTile r = new RoomTile(dirs, roomNames[i], null);
+			rooms.add(r);
+		}
 	}
 
-
-
+	/**
+	 *   puts players at their start locations
+	 * 
+	 */
 
 	private void assignPlayers(){
 		Point location;
 		for(Player p : players){
 			if(p.getName().equals("Kasandra Scarlett")){
-				location = new Point(19, 24);
+				location = new Point(18, 24);
 				playerMap.put(p, location);
 			}
 			if(p.getName().equals("Jack Mustard")){
-				location = new Point(8,24);
+				location = new Point(7,24);
 				playerMap.put(p, location);
 			}
 			if(p.getName().equals("Diane White")){
-				location = new Point(0,14);
+				location = new Point(0,19);
 				playerMap.put(p, location);
 			}
 			if(p.getName().equals("Jacob Green")){
-				location = new Point(0, 10);
+				location = new Point(0, 9);
 				playerMap.put(p, location);
 			}
 			if(p.getName().equals("Eleanor Peacock")){
-				location = new Point(7, 0);
+				location = new Point(6, 0);
 				playerMap.put(p, location);
 			}
 			if(p.getName().equals("Victor Plum")){
-				location = new Point(21, 0);
+				location = new Point(20, 0);
 				playerMap.put(p, location);
 			}
 		}
 	}
+	
+	
+	private char getInitial(Player p){
+		String[] i = p.getName().split(" ");
+		
+		
+		return i[1].charAt(0);
+	}
 
 
 	public static void main(String args[]) throws IOException{
-		Board b = new Board();
+	
+		List<Player> players = new ArrayList<Player>();
+		
+		Player playa = new Player("Jack Mustard");
+		players.add(playa);
+		Board b = new Board(players);
 		b.createBoard();
+		for(int i = 0; i<2; i++){
+			b.move(playa, "north");
+		}
+		b.move(playa, "west");
+	//	b.move(playa, "west");
+		b.printPlayerLocations();
+		System.out.println(b.toString());
+		System.out.println(b.getRoom(playa));
+		b.move(playa, "east");
+		System.out.println(b.toString());
+		
+		
 		
 
 	}
