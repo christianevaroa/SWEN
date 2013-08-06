@@ -201,7 +201,7 @@ public class Game {
 			System.out.println("Choose a character:\n"+roomsString);
 			choice = input.nextInt()-1;
 		}
-		Room accRoom = board.getRoom(currentPlayer);
+		Room accRoom = new Room(board.getRoom(currentPlayer));
 		choice = -1;
 		while(choice < 0 || choice >= weaponNames.length){
 			System.out.println("Choose a weapon:\n"+weaponsString);
