@@ -8,8 +8,6 @@ import java.util.Scanner;
 import board.*;
 
 public class Game {
-
-	//TEST
 	
 	private Board board;
 	private Player currentPlayer;
