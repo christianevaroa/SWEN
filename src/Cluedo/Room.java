@@ -6,7 +6,7 @@ public class Room implements Card {
 	public Room(String name) {
 		this.name = name;
 	}
-	
+
 	public Room copy(){
 		return new Room(this.name);
 	}
