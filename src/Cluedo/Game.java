@@ -2,21 +2,25 @@ package Cluedo;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
+
 import board.*;
 
 public class Game {
-	
+
 	private Board board;
 	private Player currentPlayer;
 	private int currentPlayerInt;
-	private int numPlayers;
+	private int numPlayers = 0;
 	private int playersLeft;
 	private int numDice = 1;
 	private Random rand;
 	private List<Card> remainingCards;
+	private List<Card> leftoverCards;
 	private List<Player> players;
 	private Scanner input;
 	private Solution solution;
@@ -33,19 +37,22 @@ public class Game {
 		this.rand = new Random();
 		this.players = new ArrayList<Player>();
 		this.remainingCards = new ArrayList<Card>();
+		this.leftoverCards = new ArrayList<Card>();
 
 		makeCards();
 		makeSolution();
 		input = new Scanner(System.in);
-		System.out.println("How many players?");
-		this.numPlayers = input.nextInt();
-		this.playersLeft = this.numPlayers;
-		input.nextLine();
+		while(this.numPlayers < 3 || this.numPlayers > 6){
+			System.out.println("How many players? (3 to 6):");
+			this.numPlayers = input.nextInt();
+			this.playersLeft = this.numPlayers;
+			input.nextLine();
+		}
 		makePlayers(this.numPlayers);
 		this.board = new Board(players);
-		
+
 		deal();
-		printHands();
+		printHands(); //TODO: remove this
 
 		currentPlayerInt = 0;
 		currentPlayer = players.get(currentPlayerInt);
@@ -73,12 +80,14 @@ public class Game {
 				this.playing = false;
 				break;
 			}
+			//input.nextLine();
 			// This while loop represents one turn
 			int movesLeft = roll();
 			System.out.println(currentPlayer+"'s turn to move. "+currentPlayer+" rolled a "+movesLeft);
 			while(!done){
 				// Movement phase
 				while(movesLeft > 0){
+					System.out.println(board.toString());
 					System.out.println("(N)orth, (E)ast, (S)outh, or (W)est? (F) to finish moving. "+movesLeft+" moves left.");
 					String dir = input.nextLine().trim().toLowerCase();
 					if(dir.equals("f")){ movesLeft = 0; }
@@ -109,8 +118,8 @@ public class Game {
 					endTurn();
 					done = true;
 				}
-				else if(choice.equals("o") && canAccuse){ //TODO: remove this test
-					currentPlayer.lose();
+				else if(choice.equals("p") && canUsePassage){
+					//board.usePassage(currentPlayer); TODO: make this work
 					endTurn();
 					done = true;
 				}
@@ -120,6 +129,7 @@ public class Game {
 			}
 		}
 		System.out.println("Game over.");
+		input.close();
 	}
 	/**
 	 * Builds a String of your available options at the end of a turn.
@@ -128,15 +138,15 @@ public class Game {
 	public String printOptions(){
 		StringBuilder opts = new StringBuilder();
 		opts.append("(V)iew hand, ");
-		if(board.canSuggest(currentPlayer)){
+		if(true){//if(board.canSuggest(currentPlayer)){
 			opts.append("Make a (S)uggestion, ");
 			this.canSuggest = true;
 		}
-		if(board.canAccuse(currentPlayer)){
+		if(true){//if(board.canAccuse(currentPlayer)){
 			opts.append("Make an (A)ccusation, ");
 			this.canAccuse = true;
 		}
-		if(board.canUsePassage(currentPlayer)){
+		if(true){//if(board.canUsePassage(currentPlayer)){
 			opts.append("Use the secret (P)assage, ");
 			this.canUsePassage = true;
 		}
@@ -149,7 +159,7 @@ public class Game {
 	 */
 	public void makeSuggestion(){
 		int choice = -1;
-		while(choice < 0 || choice > characterNames.length){
+		while(choice < 0 || choice >= characterNames.length){
 			System.out.println("Choose a character:\n"+charactersString);
 			choice = input.nextInt()-1;
 		}
@@ -157,7 +167,7 @@ public class Game {
 		choice = -1;
 		//Room sugRoom = board.getRoom(currentPlayer);
 		Room sugRoom = solution.room();  //******** TODO: <= Testing only, fix this
-		while(choice < 0 || choice > weaponNames.length){
+		while(choice < 0 || choice >= weaponNames.length){
 			System.out.println("Choose a weapon:\n"+weaponsString);
 			choice = input.nextInt()-1;
 		}
@@ -181,19 +191,19 @@ public class Game {
 	 */
 	public void makeAccusation(){
 		int choice = -1;
-		while(choice < 0 || choice > characterNames.length){
+		while(choice < 0 || choice >= characterNames.length){
 			System.out.println("Choose a character:\n"+charactersString);
 			choice = input.nextInt()-1;
 		}
 		Character accChar = new Character(characterNames[choice]);
 		choice = -1;
-		while(choice < 0 || choice > roomNames.length){
+		while(choice < 0 || choice >= roomNames.length){
 			System.out.println("Choose a character:\n"+roomsString);
 			choice = input.nextInt()-1;
 		}
 		Room accRoom = board.getRoom(currentPlayer);
 		choice = -1;
-		while(choice < 0 || choice > weaponNames.length){
+		while(choice < 0 || choice >= weaponNames.length){
 			System.out.println("Choose a weapon:\n"+weaponsString);
 			choice = input.nextInt()-1;
 		}
@@ -267,6 +277,10 @@ public class Game {
 		for(Player p : players){
 			System.out.println(p.getName()+": "+p.handToString());
 		}
+		System.out.println(leftoverCards.size());
+		for(Card c : leftoverCards){
+			System.out.println(c.toString()+", ");
+		}
 	}
 
 	/**
@@ -310,7 +324,6 @@ public class Game {
 		int w = rand.nextInt(9);
 		int c = 9 + rand.nextInt(14 - 9 + 1);
 		int r = 15 + rand.nextInt(24 - 15 + 1);
-		System.out.println(w+" "+c+" "+r);
 		// Get cards for solution.
 		Weapon sWeapon = (Weapon)remainingCards.get(w);
 		Character sCharacter = (Character)remainingCards.get(c);
