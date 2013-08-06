@@ -339,7 +339,7 @@ public class Game {
 		remainingCards.remove(sRoom);
 		// Create new solution.
 		solution = new Solution(sWeapon, sCharacter, sRoom);
-		System.out.println(solution); // TEST - DELETE THIS****************
+		System.out.println(solution); // TODO: delete this test
 	}
 
 	/**
