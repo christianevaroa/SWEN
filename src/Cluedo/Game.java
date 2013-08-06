@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -45,7 +46,11 @@ public class Game {
 		input = new Scanner(System.in);
 		while(this.numPlayers < 3 || this.numPlayers > 6){
 			System.out.println("How many players? (3 to 6):");
+			try{
 			this.numPlayers = input.nextInt();
+			} catch (InputMismatchException e){
+				this.numPlayers =-1;
+			}
 			this.playersLeft = this.numPlayers;
 			input.nextLine();
 		}
@@ -167,8 +172,7 @@ public class Game {
 		}
 		Character sugChar = new Character(characterNames[choice]);
 		choice = -1;
-		//Room sugRoom = board.getRoom(currentPlayer);
-		Room sugRoom = solution.room();  //******** TODO: <= Testing only, fix this
+		Room sugRoom = new Room(board.getRoom(currentPlayer));
 		while(choice < 0 || choice >= weaponNames.length){
 			System.out.println("Choose a weapon:\n"+weaponsString);
 			choice = input.nextInt()-1;
@@ -215,6 +219,10 @@ public class Game {
 			System.out.println(currentPlayer+" wins! The solution was:\n"+solution.toString());
 			endTurn();
 			playing = false;
+		} else {
+			System.out.println(currentPlayer+"'s accusation was wrong. "+currentPlayer+" is out of the game!");
+			currentPlayer.lose();
+			endTurn();
 		}
 	}
 	/**
@@ -299,19 +307,28 @@ public class Game {
 	 */
 	private void makePlayers(int numPlayers){
 		ArrayList<String> names = new ArrayList<String>();
+		int choice = -1;
 		for(int i = 0; i < characterNames.length; i++){
 			names.add(characterNames[i]);
 		}
-		//input = new Scanner(System.in); TODO: is this line needed
 		for(int i = 1; i <= numPlayers; i++){
-			System.out.println("Player "+i+" choose a character:");
-			for(int j = 0; j < names.size(); j++){
-				System.out.println((j+1)+": "+names.get(j));
+			while(choice < 1 || choice > names.size()){
+				choice = -1;
+				System.out.println("Player "+i+" choose a character:");
+				for(int j = 0; j < names.size(); j++){
+					System.out.print((j+1)+": "+names.get(j)+", ");
+				}
+				System.out.print("\n");
+				try{
+				choice = input.nextInt();
+				} catch (InputMismatchException e) {
+					choice = -1;
+				}
+				input.nextLine();
 			}
-			int choice = input.nextInt()-1;
-			players.add(new Player(names.get(choice)));
-			names.remove(choice);
-			input.nextLine();
+			players.add(new Player(names.get(choice-1)));
+			names.remove(choice-1);
+			choice = -1;
 		}
 	}
 	/**
