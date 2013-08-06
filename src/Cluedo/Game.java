@@ -268,6 +268,11 @@ public class Game {
 	 * @return true of player was moved, false if player couldn't move in that direction.
 	 */
 	public boolean move(String direction){
+		String movedir = "z";
+		if(direction.equals("n")){ movedir = "north"; }
+		else if(direction.equals("e")){ movedir = "east"; }
+		else if(direction.equals("s")){ movedir = "south"; }
+		else if(direction.equals("w")){ movedir = "west"; }
 		return board.move(currentPlayer, direction);
 	}
 	/**
