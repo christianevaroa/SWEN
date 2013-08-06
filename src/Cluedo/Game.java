@@ -1,6 +1,7 @@
 package Cluedo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -50,6 +51,7 @@ public class Game {
 		}
 		makePlayers(this.numPlayers);
 		this.board = new Board(players);
+		this.board.createBoard();
 
 		deal();
 		printHands(); //TODO: remove this
@@ -119,7 +121,7 @@ public class Game {
 					done = true;
 				}
 				else if(choice.equals("p") && canUsePassage){
-					//board.usePassage(currentPlayer); TODO: make this work
+					board.useSecretPassage(currentPlayer);
 					endTurn();
 					done = true;
 				}
@@ -138,15 +140,15 @@ public class Game {
 	public String printOptions(){
 		StringBuilder opts = new StringBuilder();
 		opts.append("(V)iew hand, ");
-		if(true){//if(board.canSuggest(currentPlayer)){
+		if(true){//if(board.canSuggest(currentPlayer)){ //TODO: make this work
 			opts.append("Make a (S)uggestion, ");
 			this.canSuggest = true;
 		}
-		if(true){//if(board.canAccuse(currentPlayer)){
+		if(true){//if(board.canAccuse(currentPlayer)){ //TODO: make this work
 			opts.append("Make an (A)ccusation, ");
 			this.canAccuse = true;
 		}
-		if(true){//if(board.canUsePassage(currentPlayer)){
+		if(board.canUseSecretPassage(currentPlayer)){
 			opts.append("Use the secret (P)assage, ");
 			this.canUsePassage = true;
 		}
@@ -296,10 +298,19 @@ public class Game {
 	 * @param numPlayers Number of players to create.
 	 */
 	private void makePlayers(int numPlayers){
-		input = new Scanner(System.in);
+		ArrayList<String> names = new ArrayList<String>();
+		for(int i = 0; i < characterNames.length; i++){
+			names.add(characterNames[i]);
+		}
+		//input = new Scanner(System.in); TODO: is this line needed
 		for(int i = 1; i <= numPlayers; i++){
-			System.out.println("Enter name for player "+i+":");
-			players.add(new Player(input.next()));
+			System.out.println("Player "+i+" choose a character:");
+			for(int j = 0; j < names.size(); j++){
+				System.out.println((j+1)+": "+names.get(j));
+			}
+			int choice = input.nextInt()-1;
+			players.add(new Player(names.get(choice)));
+			names.remove(choice);
 			input.nextLine();
 		}
 	}
