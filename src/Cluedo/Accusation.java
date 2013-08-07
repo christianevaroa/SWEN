@@ -22,4 +22,8 @@ public class Accusation {
 	public Weapon getWeapon() {
 		return this.weapon;
 	}
+	
+	public String toString(){
+		return murderer.getName() + " in the " + room.getName() + " with the " + weapon.getName();
+	}
 }
