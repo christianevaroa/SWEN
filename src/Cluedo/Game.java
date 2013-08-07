@@ -19,7 +19,7 @@ public class Game {
 	private int currentPlayerInt;
 	private int numPlayers = 0;
 	private int playersLeft;
-	private int numDice = 1;
+	private int numDice = 2;
 	private Random rand;
 	private List<Card> remainingCards;
 	private List<Card> leftoverCards;
@@ -30,9 +30,6 @@ public class Game {
 	private boolean canSuggest;
 	private boolean canAccuse;
 	private boolean canUsePassage;
-	private String charactersString = "1: Kasandra Scarlett, 2: Jack Mustard 3: Diane White, 4: Jacob Green, 5: Eleanor Peacock, 6: Victor Plum";
-	private String roomsString = "1: Spa, 2: Theatre, 3: Living Room, 4: Conservatory, 5: Patio, 6: Hall, 7: Kitchen, 8: Dining Room, 9: Guest House, 10: Pool";
-	private String weaponsString = "1: Rope, 2: Candlestick, 3: Knife, 4: Pistol, 5: Baseball Bat, 6: Dumbbell, 7: Trophy, 8: Poison, 9:Axe";
 
 	public Game(){
 		// Initialise fields
@@ -76,18 +73,12 @@ public class Game {
 		while(playing){
 			boolean done = false;
 			// First check if everyone is out. If everyone is out, end the game.
-			while(currentPlayer.isOut()){
-				this.playersLeft--;
-				endTurn();
-				if(this.playersLeft == 0)
-					break;
-			}	
 			if(this.playersLeft == 0){
 				System.out.println("Everyone lost.");
 				this.playing = false;
 				break;
 			}
-			//input.nextLine();
+			input.nextLine();
 			// This while loop represents one turn
 			int movesLeft = roll();
 			System.out.println(currentPlayer+"'s turn to move. "+currentPlayer+" rolled a "+movesLeft);
@@ -223,6 +214,7 @@ public class Game {
 		} else {
 			System.out.println(currentPlayer+"'s accusation was wrong. "+currentPlayer+" is out of the game!");
 			currentPlayer.lose();
+			playersLeft--;
 			endTurn();
 		}
 	}
@@ -232,12 +224,16 @@ public class Game {
 	public void endTurn(){
 		canSuggest = false;
 		canAccuse = false;
+		canUsePassage = false;
 		if(currentPlayerInt < numPlayers-1){
 			currentPlayer = players.get(++currentPlayerInt);
 		}
 		else {
 			currentPlayerInt = 0;
 			currentPlayer = players.get(currentPlayerInt);
+		}
+		if(currentPlayer.isOut()){
+			endTurn();
 		}
 	}
 	/**
@@ -377,4 +373,11 @@ public class Game {
 	private String[] weaponNames = { "Rope", "Candlestick", "Knife", "Pistol", "Baseball Bat", "Dumbbell", "Trophy", "Poison", "Axe" };
 	private String[] characterNames = { "Kasandra Scarlett", "Jack Mustard", "Diane White", "Jacob Green", "Eleanor Peacock", "Victor Plum" };
 	private String[] roomNames = { "Spa", "Theatre", "Living Room", "Conservatory", "Patio", "Hall", "Kitchen", "Dining Room", "Guest House", "Pool" };
+	/**
+	 * Strings of card names to print out when making suggestions or accusations.
+	 * This is just to save printing each one out in a for loop ever time.
+	 */
+	private String charactersString = "1: Kasandra Scarlett, 2: Jack Mustard 3: Diane White, 4: Jacob Green, 5: Eleanor Peacock, 6: Victor Plum";
+	private String roomsString = "1: Spa, 2: Theatre, 3: Living Room, 4: Conservatory, 5: Patio, 6: Hall, 7: Kitchen, 8: Dining Room, 9: Guest House, 10: Pool";
+	private String weaponsString = "1: Rope, 2: Candlestick, 3: Knife, 4: Pistol, 5: Baseball Bat, 6: Dumbbell, 7: Trophy, 8: Poison, 9:Axe";
 }
