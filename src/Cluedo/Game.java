@@ -47,7 +47,7 @@ public class Game {
 		while(this.numPlayers < 3 || this.numPlayers > 6){
 			System.out.println("How many players? (3 to 6):");
 			try{
-			this.numPlayers = input.nextInt();
+				this.numPlayers = input.nextInt();
 			} catch (InputMismatchException e){
 				this.numPlayers =-1;
 			}
@@ -145,13 +145,14 @@ public class Game {
 	public String printOptions(){
 		StringBuilder opts = new StringBuilder();
 		opts.append("(V)iew hand, ");
-		if(true){//if(board.canSuggest(currentPlayer)){ //TODO: make this work
+		String currentRoom = board.getRoom(currentPlayer);
+		if(currentRoom != null){
 			opts.append("Make a (S)uggestion, ");
 			this.canSuggest = true;
-		}
-		if(true){//if(board.canAccuse(currentPlayer)){ //TODO: make this work
-			opts.append("Make an (A)ccusation, ");
-			this.canAccuse = true;
+			if(currentRoom.equals("Pool")){
+				opts.append("Make an (A)ccusation, ");
+				this.canAccuse = true;
+			}
 		}
 		if(board.canUseSecretPassage(currentPlayer)){
 			opts.append("Use the secret (P)assage, ");
@@ -283,7 +284,7 @@ public class Game {
 		else if(direction.equals("e")){ movedir = "east"; }
 		else if(direction.equals("s")){ movedir = "south"; }
 		else if(direction.equals("w")){ movedir = "west"; }
-		return board.move(currentPlayer, direction);
+		return board.move(currentPlayer, movedir);
 	}
 	/**
 	 *TODO: TEST METHODS - DELETE BEFORE SUBMITTING***************
@@ -320,7 +321,7 @@ public class Game {
 				}
 				System.out.print("\n");
 				try{
-				choice = input.nextInt();
+					choice = input.nextInt();
 				} catch (InputMismatchException e) {
 					choice = -1;
 				}
