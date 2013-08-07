@@ -86,6 +86,10 @@ public class Game {
 				// Movement phase
 				while(movesLeft > 0){
 					System.out.println(board.toString());
+					String inRoom = board.getRoom(currentPlayer);
+					if(inRoom!=null){
+						System.out.println(currentPlayer+" entered the "+inRoom);
+					}
 					System.out.println("(N)orth, (E)ast, (S)outh, or (W)est? (F) to finish moving. "+movesLeft+" moves left.");
 					String dir = input.nextLine().trim().toLowerCase();
 					if(dir.equals("f")){ movesLeft = 0; }
@@ -280,6 +284,7 @@ public class Game {
 		else if(direction.equals("e")){ movedir = "east"; }
 		else if(direction.equals("s")){ movedir = "south"; }
 		else if(direction.equals("w")){ movedir = "west"; }
+		else if(direction.equals("z")){ return false; }
 		return board.move(currentPlayer, movedir);
 	}
 	/**
