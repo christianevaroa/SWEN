@@ -17,7 +17,7 @@ public class Board {
 	private Map<Player, Point> playerMap = new HashMap<Player, Point>();
 	private Set<Player> players = new HashSet<Player>();
 	private List<RoomTile> rooms= new ArrayList<RoomTile>();
-	//private List<Doorway> doorways = new ArrayList<Doorway>();
+
 	private Map<String, Doorway> doorways = new HashMap<String, Doorway>();
 
 	
@@ -53,7 +53,6 @@ public class Board {
 		int x = p.x;
 		int y = p.y;
 		if(board[y][x] instanceof Doorway){
-		//	String name = board[y][x].getRoom();
 			return  ((Doorway) board[y][x]).getRoom();
 		}
 		
@@ -115,9 +114,6 @@ public class Board {
 	 */
 	
 	public void useSecretPassage(Player p){
-		Point point = playerMap.get(p);
-		int x = point.x;
-		int y = point.y;
 		
 		if(getRoom(p).equals("Spa")){
 			playerMap.put(p, new Point(20,20));
@@ -331,9 +327,8 @@ public class Board {
 	private Tile[] readBoardLine(char[] info, int row){
 		Tile[] tiles = new Tile[25];
 		int chartile;
-		// i = the column number here. confused? so am i
 		
-		
+	
 		for(int i = 0; i< info.length ;i++){		
 			chartile = info[i];
 			Tile d;
@@ -433,12 +428,6 @@ public class Board {
 
 	
 	
-
-	private void createDoors(){
-		
-
-	}
-
 	
 	/**
 	 * Manually creates the Rooms on the board with weapons placed randomly
