@@ -153,29 +153,23 @@ public class Board {
 		
 		if(direction.equalsIgnoreCase("north")){
 			Point newposition = playerMap.get(p);
-			x =newposition.x;
-			y = newposition.y-1;
-		}
-		
-		if(direction.equalsIgnoreCase("south")){
+			x =   newposition.x;
+			y =   newposition.y-1;
+		}else if(direction.equalsIgnoreCase("south")){
 			
 			Point newposition = playerMap.get(p);
-			x =newposition.x;
-			y = newposition.y+1;
-		}
-
-		if(direction.equalsIgnoreCase("east")){
+			x =   newposition.x;
+			y =   newposition.y+1;
+		}else if(direction.equalsIgnoreCase("east")){
 			
 			Point newposition = playerMap.get(p);
 			x =   newposition.x+1;
 			y =   newposition.y;
-		}
-		if(direction.equalsIgnoreCase("west")){
+		}else if(direction.equalsIgnoreCase("west")){
 			Point newposition = playerMap.get(p);
 			x =   newposition.x-1;
 			y =   newposition.y;
-		}
-		
+		} 
 		if(x>=0 && y>= 0 && x<25 && y<25 && board[y][x].canMove()){
 				// handle move
 				playerMap.put(p, new Point(x ,y));
