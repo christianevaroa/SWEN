@@ -145,32 +145,35 @@ public class Board {
 	public boolean move(Player p, String direction){
 		//  my brain hurts is it board[y][x] or board[x][y]
 		// pretty sure it is board[y] [x] because the second array in the 2d array reads from left to right
-		int x=0;
-		int y=0;
+		Point current = playerMap.get(p);
+		
+		
+		int x= current.x;
+		int y= current.y;
 		
 		if(direction.equalsIgnoreCase("north")){
-			Point current = playerMap.get(p);
-			x =current.x;
-			y = current.y-1;
+			Point newposition = playerMap.get(p);
+			x =newposition.x;
+			y = newposition.y-1;
 		}
 		
 		if(direction.equalsIgnoreCase("south")){
 			
-			Point current = playerMap.get(p);
-			x =current.x;
-			y = current.y+1;
+			Point newposition = playerMap.get(p);
+			x =newposition.x;
+			y = newposition.y+1;
 		}
 
 		if(direction.equalsIgnoreCase("east")){
 			
-			Point current = playerMap.get(p);
-			x =current.x+1;
-			y = current.y;
+			Point newposition = playerMap.get(p);
+			x =   newposition.x+1;
+			y =   newposition.y;
 		}
 		if(direction.equalsIgnoreCase("west")){
-			Point current = playerMap.get(p);
-			x =current.x-1;
-			y = current.y;
+			Point newposition = playerMap.get(p);
+			x =   newposition.x-1;
+			y =   newposition.y;
 		}
 		
 		if(x>=0 && y>= 0 && x<25 && y<25 && board[y][x].canMove()){
@@ -273,7 +276,6 @@ public class Board {
 			for(int i = 0; i<board[0].length;i++){
 				for(int j = 0;j<board[i].length; j++){
 					if(playerIsAtPosition(j, i)!=null){
-						System.out.println(i + " " + j);
 						sb.append(this.getInitial(playerIsAtPosition(j, i)));
 					}
 					
