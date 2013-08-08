@@ -1,25 +1,25 @@
-     #  #   # #    #  ###
-fffff#  #fff# #ffff#  ###
-fffff#  #fff2 #ffff#  ###
-fffff#  #fff# #ffff#  ###
-fffff#  #fff# #ffff#  ###
-fffff#  #fff# 3ffff#  ###
-fff#1   #fff# #ffff#  ###
-####    ##2## #fff##  ###
-               #3#    4##
-            #           #
+rrrrr#  #rrr# #rrrr#  #rr
+rrrrr#  #rrr# #rrrr#  #rr
+rrrrr#  #rrr2 #rrrr#  #rr
+rrrrr#  #rrr# #rrrr#  #rr
+rrrrr#  #rrr# #rrrr#  #rr
+rrrrr#  #rrr# 3rrrr#  #rr
+rrr#1   #rrr# #rrrr#  #rr
+####    ##2## #rrr##  4rr
+               #3#    ###
+                        #
 ####                    #
-    #5##  ####d### ###6##
-    ###5  #      # ######
-       #  #      # 6#####
-       #  #      # 6#####
-       #  #      # ######
-       5  d######d ######
-   ##5##           ######
+rrrr#5##  ####d### ###6##
+rrrrrrr5  #rrrrrr# #rrrrr
+rrrrrrr#  #rrrrrr# 6rrrrr
+rrrrrrr#  #rrrrrr# 6rrrrr
+rrrrrrr#  #rrrrrr# #rrrrr
+rrrrrrr5  #d####d# #rrrrr
+rrr##5##           ######
 ####                    #
           ##8###        #
-          #    #    9####
-######   #     8    #####
-      7  #     #    #####
-      #  #      #   #####
-      #  #      #   #####
+          #rrrr#    9####
+######   #rrrrr8    #rrrr
+rrrrrr7  #rrrrr#    #rrrr
+rrrrrr#  #rrrrrr#   #rrrr
+rrrrrr#  #rrrrrr#   #rrrr

@@ -207,7 +207,6 @@ public class Board {
 
 	public void evaluateSuggestions(Player p , Suggestion s){
 		// move
-		//if(s.getRoom().getName().equals(" ")
 		String name = s.getRoom().getName();
 		Doorway d = doorways.get(name);
 		Point point = new Point(d.x, d.y);
@@ -277,6 +276,8 @@ public class Board {
 					}
 					else if(board[i][j] instanceof Doorway){
 						sb.append('d');
+					}else if(board[i][j] instanceof RoomTile){
+						sb.append('r');
 					}
 				}
 				sb.append('\n');
@@ -417,6 +418,12 @@ public class Board {
 					tiles[i] = d; // assign to board
 					doorways.put(name, (Doorway) d) ;
 					
+					break;
+					
+				case 'r':
+					// spa
+					d = new RoomTile();
+					tiles[i] = d;
 					break;
 								
 				default:

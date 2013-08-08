@@ -29,6 +29,10 @@ public class RoomTile extends Tile {
 		return room + ", Weapon:  " + weapon;
 	}
 	
+	public boolean canMove(){
+		return false;
+	}
+	
 	
 	public Weapon contains(){
 		return weapon;
