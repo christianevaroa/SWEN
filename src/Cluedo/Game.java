@@ -56,7 +56,6 @@ public class Game {
 		this.board.createBoard();
 
 		deal();
-		printHands(); //TODO: remove this
 
 		currentPlayerInt = 0;
 		currentPlayer = players.get(currentPlayerInt);
@@ -78,7 +77,6 @@ public class Game {
 				this.playing = false;
 				break;
 			}
-			input.nextLine();
 			// This while loop represents one turn
 			int movesLeft = roll();
 			System.out.println(currentPlayer+"'s turn to move. "+currentPlayer+" rolled a "+movesLeft);
