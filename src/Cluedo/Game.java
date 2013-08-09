@@ -161,15 +161,23 @@ public class Game {
 	public void makeSuggestion(){
 		int choice = -1;
 		while(choice < 0 || choice >= characterNames.length){
-			System.out.println("Choose a character:\n"+charactersString);
-			choice = input.nextInt()-1;
+			try{
+				System.out.println("Choose a character:\n"+charactersString);
+				choice = input.nextInt()-1;
+			} catch (InputMismatchException e){
+				choice = -1;
+			}
 		}
 		Character sugChar = new Character(characterNames[choice]);
 		choice = -1;
 		Room sugRoom = new Room(board.getRoom(currentPlayer));
 		while(choice < 0 || choice >= weaponNames.length){
-			System.out.println("Choose a weapon:\n"+weaponsString);
-			choice = input.nextInt()-1;
+			try{
+				System.out.println("Choose a weapon:\n"+weaponsString);
+				choice = input.nextInt()-1;
+			} catch (InputMismatchException e){
+				choice = -1;
+			}
 		}
 		Weapon sugWeap = new Weapon(weaponNames[choice]);
 		Suggestion suggestion = new Suggestion(sugChar, sugRoom, sugWeap);
