@@ -200,20 +200,32 @@ public class Game {
 	public void makeAccusation(){
 		int choice = -1;
 		while(choice < 0 || choice >= characterNames.length){
-			System.out.println("Choose a character:\n"+charactersString);
-			choice = input.nextInt()-1;
+			try{
+				System.out.println("Choose a character:\n"+charactersString);
+				choice = input.nextInt()-1;
+			} catch (InputMismatchException e){
+				choice = -1;
+			}
 		}
 		Character accChar = new Character(characterNames[choice]);
 		choice = -1;
 		while(choice < 0 || choice >= roomNames.length){
-			System.out.println("Choose a room:\n"+roomsString);
-			choice = input.nextInt()-1;
+			try{
+				System.out.println("Choose a room:\n"+roomsString);
+				choice = input.nextInt()-1;
+			} catch (InputMismatchException e){
+				choice = -1;
+			}
 		}
 		Room accRoom = new Room(roomNames[choice]);
 		choice = -1;
 		while(choice < 0 || choice >= weaponNames.length){
-			System.out.println("Choose a weapon:\n"+weaponsString);
-			choice = input.nextInt()-1;
+			try{
+				System.out.println("Choose a weapon:\n"+weaponsString);
+				choice = input.nextInt()-1;
+			} catch (InputMismatchException e){
+				choice = -1;
+			}
 		}
 		Weapon accWeap = new Weapon(weaponNames[choice]);
 		Accusation accusation = new Accusation(accChar, accRoom, accWeap);
