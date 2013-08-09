@@ -210,7 +210,21 @@ public class Board {
 		String name = s.getRoom().getName();
 		Doorway d = doorways.get(name);
 		Point point = new Point(d.x, d.y);
-		playerMap.put(p, point);
+		String accusedname = s.getCharacter().getName();
+		Player accused=null; 
+		
+		for(Player pl : players){
+			if(pl.getName().equals(accusedname)){
+				accused = pl;		
+			}
+		}
+		if(accused==null){
+			accused = new Player(accusedname);
+		}
+		playerMap.put(accused, point);
+
+		
+	//	playerMap.put(p, point);
 		
 
 	}
