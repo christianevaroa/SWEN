@@ -185,11 +185,11 @@ public class Game {
 
 		// Refuting: just check if card is still in remainingCards as cards are only removed from there to be put into the solution
 		if(remainingCards.contains(sugChar)){
-			System.out.println("Your suggestion was refuted: "+sugChar+" was not the murderer");
+			System.out.println("Your suggestion was refuted: "+sugChar.getName()+" was not the murderer");
 		} else if(remainingCards.contains(sugRoom)){
-			System.out.println("Your suggestion was refuted: The murder didn't occur in "+sugRoom);
+			System.out.println("Your suggestion was refuted: The murder didn't occur in "+sugRoom.getName());
 		} else if(remainingCards.contains(sugWeap)){
-			System.out.println("Your suggestion was refuted: "+sugWeap+" wasn't the murder weapon");
+			System.out.println("Your suggestion was refuted: "+sugWeap.getName()+" wasn't the murder weapon");
 		}
 	}
 	/**
