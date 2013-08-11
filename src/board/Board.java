@@ -126,7 +126,6 @@ public class Board {
 		}
 		
 		
-		
 	}
 	
 	
@@ -139,8 +138,8 @@ public class Board {
 	 */
 
 	public boolean move(Player p, String direction){
-		//  my brain hurts is it board[y][x] or board[x][y]
-		// pretty sure it is board[y] [x] because the second array in the 2d array reads from left to right
+	
+		
 		Point current = playerMap.get(p);
 		
 		
@@ -166,6 +165,7 @@ public class Board {
 			x =   newposition.x-1;
 			y =   newposition.y;
 		} 
+		// watch out it  board[y][x] because the second array in the 2d array reads from left to right
 		if(x>=0 && y>= 0 && x<25 && y<25 && board[y][x].canMove()){
 				// handle move
 				playerMap.put(p, new Point(x ,y));
@@ -212,21 +212,19 @@ public class Board {
 		Point point = new Point(d.x, d.y);
 		String accusedname = s.getCharacter().getName();
 		Player accused=null; 
-		
+		// check if one of the players in the game is accused
 		for(Player pl : players){
 			if(pl.getName().equals(accusedname)){
 				accused = pl;		
 			}
 		}
+		// else create a new player
 		if(accused==null){
 			accused = new Player(accusedname);
 		}
 		playerMap.put(accused, point);
 
 		
-	//	playerMap.put(p, point);
-		
-
 	}
 	
 
@@ -299,14 +297,6 @@ public class Board {
 			return sb.toString();
 		}
 	}
-	
-	
-	public void moveSecretPassage(){
-		
-		
-		
-	}
-	
 	
 	
 	
@@ -451,27 +441,6 @@ public class Board {
 	
 	
 	/**
-	 * Manually creates the Rooms on the board with weapons placed randomly
-	 * @param weapons
-	 */
-	
-	private void createRooms(List<Weapon> weapons){
-		// probably gonna have to manually add rooms
-		Collections.shuffle(weapons);
-		
-		String[] roomNames = { "Spa", "Theatre", "Living Room", "Conservatory", "Patio", "Hall", "Kitchen", "Dining Room", "Guest House", "Pool" };
-
-		
-		boolean dirs[] = {true, false, false, false};
-		
-		for(int i = 0; i < weapons.size(); i++){
-			// create Roomtiles with random weapons
-			RoomTile r = new RoomTile(dirs, roomNames[i], weapons.get(i)  );
-			rooms.add(r);	
-		}
-	}
-	
-	/**
 	 * creates all the rooms without weapons
 	 * 
 	 * 
@@ -479,11 +448,10 @@ public class Board {
 	private void createRooms(){
 		
 		String[] roomNames = { "Spa", "Theatre", "Living Room", "Conservatory", "Patio", "Hall", "Kitchen", "Dining Room", "Guest House", "Pool" };
-		boolean dirs[] = {true, false, false, false};
 		
-		
+	
 		for (int i = 0; i< roomNames.length; i++){
-			RoomTile r = new RoomTile(dirs, roomNames[i], null);
+			RoomTile r = new RoomTile( roomNames[i], null);
 			rooms.add(r);
 		}
 	}

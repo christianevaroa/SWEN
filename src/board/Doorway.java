@@ -20,15 +20,11 @@ public class Doorway extends Tile {
 	 * @param r
 	 */
 	public Doorway(String roomname, Board b, RoomTile r, int x , int y) {
-		//super(dirs, roomname);
-		roomname = roomname;
 		board= b;
 		this.x = x;
 		this.y = y;
 		room = r;
 	
-
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Doorway(){
@@ -42,7 +38,6 @@ public class Doorway extends Tile {
 	public RoomTile getRoomm(){
 		return room;
 	}
-	
 	
 	
 	
