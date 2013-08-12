@@ -22,7 +22,6 @@ public class Game {
 	private int numDice = 2;
 	private Random rand;
 	private List<Card> remainingCards;
-	private List<Card> leftoverCards;
 	private List<Player> players;
 	private Scanner input;
 	private Solution solution;
@@ -36,7 +35,6 @@ public class Game {
 		this.rand = new Random();
 		this.players = new ArrayList<Player>();
 		this.remainingCards = new ArrayList<Card>();
-		this.leftoverCards = new ArrayList<Card>();
 
 		makeCards();
 		makeSolution();
@@ -316,10 +314,6 @@ public class Game {
 	public void printHands(){
 		for(Player p : players){
 			System.out.println(p.getName()+": "+p.handToString());
-		}
-		System.out.println(leftoverCards.size());
-		for(Card c : leftoverCards){
-			System.out.println(c.toString()+", ");
 		}
 	}
 
