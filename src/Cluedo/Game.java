@@ -81,13 +81,14 @@ public class Game {
 			while(!done){
 				// Movement phase
 				while(movesLeft > 0){
+					String dir = "z";
 					System.out.println(board.toString());
 					String inRoom = board.getRoom(currentPlayer);
 					if(inRoom!=null){
 						System.out.println(currentPlayer+" entered the "+inRoom);
 					}
 					System.out.println("(N)orth, (E)ast, (S)outh, or (W)est? (F) to finish moving. "+movesLeft+" moves left.");
-					String dir = input.nextLine().trim().toLowerCase();
+					dir = input.nextLine().trim().toLowerCase();
 					if(dir.equals("f")){ movesLeft = 0; }
 					else if(move(dir)){
 						movesLeft--;
@@ -306,16 +307,7 @@ public class Game {
 		else if(direction.equals("s")){ movedir = "south"; }
 		else if(direction.equals("w")){ movedir = "west"; }
 		else if(direction.equals("z")){ return false; }
-		//System.out.println(board.move(currentPlayer, movedir));
 		return board.move(currentPlayer, movedir);
-	}
-	/**
-	 *TODO: TEST METHODS - DELETE BEFORE SUBMITTING***************
-	 */
-	public void printHands(){
-		for(Player p : players){
-			System.out.println(p.getName()+": "+p.handToString());
-		}
 	}
 
 	/**
