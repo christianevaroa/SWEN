@@ -85,8 +85,9 @@ public class Game {
 					System.out.println(board.toString());
 					String inRoom = board.getRoom(currentPlayer);
 					if(inRoom!=null){
-						System.out.println(currentPlayer+" entered the "+inRoom);
+						System.out.println(currentPlayer+" is in the "+inRoom);
 					}
+					System.out.println(currentPlayer+": ");
 					System.out.println("(N)orth, (E)ast, (S)outh, or (W)est? (F) to finish moving. "+movesLeft+" moves left.");
 					dir = input.nextLine().trim().toLowerCase();
 					if(dir.equals("f")){ movesLeft = 0; }
