@@ -167,6 +167,7 @@ public class Board {
 		} else{
 			return false;
 		}
+		// heli
 		// watch out it  board[y][x] because the second array in the 2d array reads from left to right
 		if(x>=0 && y>= 0 && x<25 && y<25 && board[y][x].canMove()){
 				// handle move
