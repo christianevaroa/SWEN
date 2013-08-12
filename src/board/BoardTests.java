@@ -225,7 +225,6 @@ public class BoardTests {
 			try {
 				throw new Exception();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
