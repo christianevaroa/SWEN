@@ -9,6 +9,7 @@ public class Suggestion {
 	public Suggestion(Character character, Room room, Weapon weapon){
 		this.character = character;
 		this.room = room;
+		this.weapon = weapon;
 	}
 	
 	public Weapon getWeapon(){
