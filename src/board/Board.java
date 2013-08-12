@@ -257,10 +257,7 @@ public class Board {
 
 			}
 			
-			br.close();
-			//just to check if it works, will delete this	
-			System.out.println(this.toString());
-			
+			br.close();			
 		}catch (IOException e){
 			System.out.println(e.getStackTrace());
 		}
