@@ -306,6 +306,7 @@ public class Game {
 		else if(direction.equals("s")){ movedir = "south"; }
 		else if(direction.equals("w")){ movedir = "west"; }
 		else if(direction.equals("z")){ return false; }
+		//System.out.println(board.move(currentPlayer, movedir));
 		return board.move(currentPlayer, movedir);
 	}
 	/**
