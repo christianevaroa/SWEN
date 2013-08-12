@@ -124,8 +124,7 @@ public class Board {
 		}else if(getRoom(p).equals("Kitchen")){
 			playerMap.put(p, new Point(22,7));
 		}
-		
-		
+	
 	}
 	
 	
