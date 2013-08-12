@@ -42,7 +42,7 @@ public class Game {
 		makeSolution();
 		input = new Scanner(System.in);
 		while(this.numPlayers < 3 || this.numPlayers > 6){
-			System.out.println("How many players? (3 to 6):");
+			System.out.println("How many players? (3 to 6): ");
 			try{
 				this.numPlayers = input.nextInt();
 			} catch (InputMismatchException e){
@@ -166,6 +166,7 @@ public class Game {
 				choice = input.nextInt()-1;
 			} catch (InputMismatchException e){
 				choice = -1;
+				input.next();
 			}
 		}
 		Character sugChar = new Character(characterNames[choice]);
@@ -177,6 +178,7 @@ public class Game {
 				choice = input.nextInt()-1;
 			} catch (InputMismatchException e){
 				choice = -1;
+				input.next();
 			}
 		}
 		Weapon sugWeap = new Weapon(weaponNames[choice]);
@@ -205,6 +207,7 @@ public class Game {
 				choice = input.nextInt()-1;
 			} catch (InputMismatchException e){
 				choice = -1;
+				input.next();
 			}
 		}
 		Character accChar = new Character(characterNames[choice]);
@@ -215,6 +218,7 @@ public class Game {
 				choice = input.nextInt()-1;
 			} catch (InputMismatchException e){
 				choice = -1;
+				input.next();
 			}
 		}
 		Room accRoom = new Room(roomNames[choice]);
@@ -225,6 +229,7 @@ public class Game {
 				choice = input.nextInt()-1;
 			} catch (InputMismatchException e){
 				choice = -1;
+				input.next();
 			}
 		}
 		Weapon accWeap = new Weapon(weaponNames[choice]);
